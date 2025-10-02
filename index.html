@@ -1,442 +1,360 @@
- <!DOCTYPE html>
-<html lang="en">
-
+<!DOCTYPE html>
+<html lang="id">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Aliftzy</title>
-	<script src="https://cdn.tailwindcss.com">
-	</script>
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-	<style>
-		@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Profil + Popup + Story Video + Music Player</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      color: #333;
+      text-align: center;
+      overflow-x: hidden;
+      position: relative;
+    }
 
-		* {
-			font-family: 'Poppins', sans-serif;
-		}
+    /* Background Video */
+    .video-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      min-width: 100%;
+      min-height: 100%;
+      z-index: -1;
+      object-fit: cover;
+      filter: brightness(0.4);
+    }
 
-		body {
-			overflow-x: hidden;
-		}
+    /* Navbar */
+    nav.navbar {
+      background: linear-gradient(90deg, #001f2f, #003344);
+      padding: 10px 0;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0, 240, 255, 0.2);
+      position: relative;
+      z-index: 2;
+    }
 
-		.video-bg {
-			position: fixed;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 100%;
-			z-index: -2;
-			object-fit: cover;
-		}
+    nav.navbar ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
 
-		.video-overlay {
-			position: fixed;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 100%;
-			background: rgba(0, 0, 0, 0.4);
-			z-index: -1;
-		}
+    nav.navbar li {
+      display: inline;
+      margin: 0 15px;
+    }
 
-		.glass-card {
-			background: rgba(255, 255, 255, 0.1);
-			backdrop-filter: blur(20px);
-			border: 1px solid rgba(255, 255, 255, 0.2);
-			box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
-		}
+    nav.navbar a {
+      color: #00f0ff;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1.1rem;
+      transition: color 0.3s ease;
+    }
 
-		.whatsapp-btn {
-			background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
-			transform: translateY(0);
-			transition: all 0.3s ease;
-		}
+    nav.navbar a:hover {
+      color: yellow;
+    }
 
-		.whatsapp-btn:hover {
-			background: linear-gradient(135deg, #128C7E 0%, #075E54 100%);
-			transform: translateY(-2px);
-			box-shadow: 0 10px 30px rgba(37, 211, 102, 0.3);
-		}
+    section {
+      padding: 40px 20px;
+      position: relative;
+      z-index: 2;
+    }
 
-		.profile-img {
-			animation: float 3s ease-in-out infinite;
-			transition: all 0.3s ease;
-		}
+    h1, h2, p {
+      margin-bottom: 20px;
+    }
 
-		.profile-img:hover {
-			transform: scale(1.05);
-			box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-		}
+    /* Profil Video */
+    .profile-video-container {
+      width: 200px;
+      height: 200px;
+      margin: 20px auto;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 4px solid #333;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    }
 
-		@keyframes float {
-			0%,
-			100% {
-				transform: translateY(0px);
-			}
-			50% {
-				transform: translateY(-10px);
-			}
-		}
+    .profile-video-container video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
 
-		.audio-player-container {
-			background: rgba(255, 255, 255, 0.15);
-			backdrop-filter: blur(15px);
-			border: 1px solid rgba(255, 255, 255, 0.2);
-		}
+    /* Jam Digital */
+    #jam-digital {
+      margin: 15px auto;
+      font-size: 18px;
+      background: #333;
+      color: #fff;
+      padding: 8px 15px;
+      border-radius: 8px;
+      display: inline-block;
+    }
 
-		.audio-progress {
-			-webkit-appearance: none;
-			width: 100%;
-			height: 6px;
-			background: rgba(255, 255, 255, 0.3);
-			border-radius: 3px;
-			outline: none;
-			cursor: pointer;
-		}
+    /* Tombol shortcut */
+    .btn-kunjungi {
+      display: inline-block;
+      margin: 10px;
+      padding: 12px 20px;
+      background: #4CAF50;
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+      border-radius: 8px;
+      transition: background 0.3s ease;
+    }
+    .btn-kunjungi:hover {
+      background: #45a049;
+    }
 
-		.audio-progress::-webkit-slider-thumb {
-			-webkit-appearance: none;
-			width: 18px;
-			height: 18px;
-			background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
-			border-radius: 50%;
-			cursor: pointer;
-			box-shadow: 0 2px 10px rgba(37, 211, 102, 0.5);
-		}
+    /* Story Video */
+    .story-container {
+      display: flex;
+      overflow-x: auto;
+      gap: 15px;
+      padding: 10px 20px 30px;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+    }
 
-		.audio-progress::-moz-range-thumb {
-			width: 18px;
-			height: 18px;
-			background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
-			border-radius: 50%;
-			cursor: pointer;
-			border: none;
-			box-shadow: 0 2px 10px rgba(37, 211, 102, 0.5);
-		}
+    .story-item {
+      flex: 0 0 auto;
+      width: 120px;
+      height: 200px;
+      border-radius: 10px;
+      overflow: hidden;
+      scroll-snap-align: start;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
 
-		.play-btn {
-			background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
-			transition: all 0.3s ease;
-		}
+    .story-item video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
 
-		.play-btn:hover {
-			background: linear-gradient(135deg, #128C7E 0%, #075E54 100%);
-			transform: scale(1.05);
-		}
+    .story-container::-webkit-scrollbar {
+      display: none;
+    }
 
-		.scroll-container {
-			height: 100vh;
-			overflow-y: auto;
-			scroll-behavior: smooth;
-		}
+    /* Tentang Profesional */
+    #tentang {
+      background-color: rgba(0, 0, 0, 0.3);
+      color: white;
+      max-width: 700px;
+      margin: 40px auto;
+      padding: 30px 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 240, 255, 0.3);
+      font-size: 1.1rem;
+      line-height: 1.6;
+      text-align: left;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
 
-		.fade-in {
-			opacity: 0;
-			transform: translateY(30px);
-			animation: fadeInUp 0.8s ease forwards;
-		}
+    #tentang h2 {
+      color: #00f0ff;
+      margin-bottom: 20px;
+      font-weight: 700;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
 
-		@keyframes fadeInUp {
-			to {
-				opacity: 1;
-				transform: translateY(0);
-			}
-		}
+    #tentang p {
+      margin-bottom: 12px;
+    }
 
-		.stagger-1 {
-			animation-delay: 0.1s;
-		}
+    /* Warna kuning untuk judul Profil, Story, dan nama Aliff */
+    #profil h1,
+    #video-story h2,
+    #profil p {
+      color: yellow;
+    }
 
-		.stagger-2 {
-			animation-delay: 0.2s;
-		}
-
-		.stagger-3 {
-			animation-delay: 0.3s;
-		}
-
-		.stagger-4 {
-			animation-delay: 0.4s;
-		}
-
-		.stagger-5 {
-			animation-delay: 0.5s;
-		}
-
-		.stagger-6 {
-			animation-delay: 0.6s;
-		}
-
-		.volume-slider {
-			-webkit-appearance: none;
-			width: 60px;
-			height: 4px;
-			background: rgba(255, 255, 255, 0.3);
-			border-radius: 2px;
-			outline: none;
-		}
-
-		.volume-slider::-webkit-slider-thumb {
-			-webkit-appearance: none;
-			width: 12px;
-			height: 12px;
-			background: #25D366;
-			border-radius: 50%;
-			cursor: pointer;
-		}
-
-		@media (max-width: 768px) {
-			.glass-card {
-				margin: 10px;
-				backdrop-filter: blur(15px);
-			}
-
-			.profile-img {
-				width: 100px;
-				height: 100px;
-			}
-		}
-	</style>
+    /* Music Player */
+    #music-player {
+      padding: 40px 20px;
+      position: relative;
+      z-index: 2;
+      max-width: 350px;
+      margin: 20px auto 60px;
+      background: rgba(0,0,0,0.7);
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+      color: #fff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      text-align: center;
+    }
+    #music-player h2 {
+      color: yellow;
+      margin-bottom: 15px;
+    }
+    #music-player img {
+      width: 250px;
+      height: 250px;
+      border-radius: 50%;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.6);
+      margin-bottom: 15px;
+      object-fit: cover;
+    }
+    #music-player h3 {
+      margin: 0;
+    }
+    #music-player p {
+      margin: 0;
+      color: #ccc;
+      margin-bottom: 15px;
+    }
+    #play-pause {
+      background: linear-gradient(90deg, #00f0ff, #0066cc);
+      border: none;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      font-size: 24px;
+      color: white;
+      margin-bottom: 15px;
+      transition: background 0.3s ease;
+    }
+    #play-pause:hover {
+      background: linear-gradient(90deg, #0066cc, #00f0ff);
+    }
+    #progress {
+      width: 100%;
+      cursor: pointer;
+      accent-color: yellow;
+    }
+  </style>
 </head>
+<body>
 
-<body class="scroll-container">
-	<div id="video-bg-placeholder"></div>
-	<div class="video-overlay"></div>
+  <!-- Background Video -->
+  <video autoplay muted loop playsinline class="video-bg">
+    <source src="https://files.catbox.moe/4ci872.mp4" type="video/mp4" />
+    Browser Anda tidak mendukung video background.
+  </video>
 
-	<div class="min-h-screen flex flex-col items-center justify-center p-4 py-20">
-		<div class="w-full max-w-md glass-card rounded-3xl overflow-hidden p-8">
-			<div class="flex flex-col items-center mb-8 fade-in stagger-1">
-				<div class="relative">
-				    <div class="profile-container"></div> 
+  <!-- Navbar -->
+  <nav class="navbar">
+    <ul>
+      <li><a href="#profil">Profil</a></li>
+      <li><a href="#tentang">Tentang</a></li>
+      <li><a href="https://instagram.com/eks_aipp23" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+    </ul>
+  </nav>
 
-				</div>
-				<h1 class="text-2xl font-bold mt-6 text-white drop-shadow-lg">Aliftzy Offc</h1>
-				<p class="text-white/80 text-center mt-2 font-medium">Is Here </p>
-			</div>
-
-			<div class="space-y-4 mb-8">
-<a href="https://wa.me/6285545235244?text=halo%20om" class="whatsapp-btn fade-in stagger-2 flex items-center justify-center text-white font-semibold py-4 px-6 rounded-2xl shadow-lg hover:shadow-xl transition-all bg-gradient-to-r from-green-500 to-emerald-500">
-    <i class="fab fa-whatsapp mr-3 text-xl"></i> Owner
-</a>
-<a href="https://whatsapp.com/channel/0029VbAK2Yr7dmeRktV9ib3k" class="whatsapp-btn fade-in stagger-3 flex items-center justify-center text-white font-semibold py-4 px-6 rounded-2xl shadow-lg hover:shadow-xl transition-all bg-gradient-to-r from-green-500 to-emerald-500">
-    <i class="fab fa-whatsapp mr-3 text-xl"></i> Channel
-</a>
-<a href="https://chat.whatsapp.com/IAPOovTdIX6Dl5n4U6kDzd?mode=r_t" class="whatsapp-btn fade-in stagger-4 flex items-center justify-center text-white font-semibold py-4 px-6 rounded-2xl shadow-lg hover:shadow-xl transition-all bg-gradient-to-r from-green-500 to-emerald-500">
-    <i class="fab fa-whatsapp mr-3 text-xl"></i> Group
-</a>
-<a href=" https://wa.me/6285545235244?text=.aliftzy" class="whatsapp-btn fade-in stagger-5 flex items-center justify-center text-white font-semibold py-4 px-6 rounded-2xl shadow-lg hover:shadow-xl transition-all bg-gradient-to-r from-green-500 to-emerald-500">
-    <i class="fas fa-robot mr-3 text-xl"></i> Aliftzy Bot
-</a>
-<a href="https://youtube.com/@aliftzy23?si=xGMxStsN8qMeCdzW" class="whatsapp-btn fade-in stagger-6 flex items-center justify-center text-white font-semibold py-4 px-6 rounded-2xl shadow-lg hover:shadow-xl transition-all bg-gradient-to-r from-red-600 to-red-500">
-    <i class="fab fa-youtube mr-3 text-xl"></i> YouTube
-</a>
-<a href="https://www.instagram.com/eks_aipp23?igsh=ZGh5Mmg2Y3htNTM=" class="whatsapp-btn fade-in stagger-7 flex items-center justify-center text-white font-semibold py-4 px-6 rounded-2xl shadow-lg hover:shadow-xl transition-all bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500">
-    <i class="fab fa-instagram mr-3 text-xl"></i> Instagram
-</a>
-<a href="https://www.tiktok.com/@wannabeyours2317?_t=ZS-8xrCfJsLNXL&_r=1" class="whatsapp-btn fade-in stagger-8 flex items-center justify-center text-white font-semibold py-4 px-6 rounded-2xl shadow-lg hover:shadow-xl transition-all bg-gradient-to-r from-black to-gray-800">
-    <i class="fab fa-tiktok mr-3 text-xl"></i> TikTok
-</a>
-            </div> 
-
-            <!-- Audio Player -->
-           <div class="audio-player-container fade-in stagger-6 rounded-2xl p-4 md:p-6">
-    <div class="flex items-center justify-between mb-3 md:mb-4">
-        <div class="flex items-center">
-            <button id="playBtn" class="play-btn w-10 h-10 md:w-12 md:h-12 rounded-full text-white flex items-center justify-center shadow-lg">
-                <i class="fas fa-play text-sm md:text-base" id="playIcon"></i>
-            </button>
-            <div class="ml-3 md:ml-4">
-                <p class="text-xs md:text-sm font-semibold text-white">NCTS</p>
-                <p class="text-[10px] md:text-xs text-white/70">Next!</p>
-            </div>
-        </div>
-        <div class="flex items-center space-x-1 md:space-x-2">
-            <i class="fas fa-volume-up text-white/70 text-xs md:text-sm"></i>
-            <input type="range" id="volumeSlider" class="volume-slider w-12 md:w-16" min="0" max="100" value="50">
-            <span class="text-[10px] md:text-xs text-white/70 min-w-[30px] md:min-w-[35px]" id="timeDisplay">0:00</span>
-        </div>
+  <!-- Profil -->
+  <section id="profil">
+    <h1>Profil Saya</h1>
+    <!-- Jam Digital pindah ke sini -->
+    <div id="jam-digital">🕒 Time: --</div>
+    <div class="profile-video-container">
+      <video src="https://files.catbox.moe/irdpqp.mp4" autoplay muted loop playsinline></video>
     </div>
-    <input type="range" id="audioProgress" class="audio-progress w-full mb-1 md:mb-2" value="0" min="0" max="100">
-    <div class="flex justify-between text-[10px] md:text-xs text-white/70 mt-1 md:mt-2">
-        <span id="currentTime">0:00</span>
-        <span id="totalTime">3:00</span>
+    <p>Halo! My Name Is Aliff.</p>
+  </section>
+
+  <!-- Music Player -->
+  <section id="music-player">
+    <h2>My Music Favorite</h2>
+    <img id="cover" src="https://files.catbox.moe/h0syp4.jpeg" alt="Album Cover" />
+    <h3 id="title">Back To Be Friend</h3>
+    <p id="artist">sombr</p>
+    <audio id="audio" src="https://files.catbox.moe/e2unds.m4a" preload="auto"></audio>
+    <button id="play-pause">▶️</button>
+    <input id="progress" type="range" min="0" max="100" value="0" />
+  </section>
+
+<!-- Tentang -->
+<section id="tentang">
+  <h2>Tentang Saya</h2>
+  <p>
+    Halo! Perkenalkan, saya <strong>Muhammad Alifudin</strong>, seorang pelajar dari 
+    <strong>SMK Industri Kreatif</strong> dengan fokus pada bidang multimedia dan teknologi digital. 
+    Saya memiliki ketertarikan mendalam terhadap desain grafis, pengembangan web, serta pemanfaatan teknologi 
+    untuk menghasilkan karya yang kreatif dan inovatif. 
+  </p>
+  <p>
+    Selama menempuh pendidikan, saya terus berusaha mengasah keterampilan baik dari segi teknis maupun 
+    kemampuan berpikir kreatif. Bagi saya, belajar bukan sekadar kewajiban, melainkan kesempatan untuk 
+    mengeksplorasi ide-ide baru dan mengembangkan potensi diri. 
+    Dengan semangat kerja keras dan rasa ingin tahu yang tinggi, saya berharap dapat berkontribusi dalam 
+    menghadirkan solusi kreatif di dunia industri digital yang terus berkembang.
+  </p>
+</section>
+
+
+  <!-- Story Video -->
+  <section id="video-story">
+    <h2>Story Video</h2>
+    <div class="story-container">
+      <div class="story-item"><video src="https://files.catbox.moe/0lxtiw.mp4" muted autoplay loop playsinline></video></div>
+      <div class="story-item"><video src="https://files.catbox.moe/zieukq.mp4" muted autoplay loop playsinline></video></div>
+      <div class="story-item"><video src="https://files.catbox.moe/iy56ur.mp4" muted autoplay loop playsinline></video></div>
+      <div class="story-item"><video src="https://files.catbox.moe/8djsd6.mp4" muted autoplay loop playsinline></video></div>
     </div>
-</div>
-        </div>
-       
-    </div>
-  
-<script src="config.js"></script>
+  </section>
 
-  <script>
-  // Audio player functionality 
-    const playBtn = document.getElementById('playBtn');
-    const playIcon = document.getElementById('playIcon');
-    const audioProgress = document.getElementById('audioProgress');
-    const timeDisplay = document.getElementById('timeDisplay');
-    const currentTime = document.getElementById('currentTime');
-    const totalTime = document.getElementById('totalTime');
-    const volumeSlider = document.getElementById('volumeSlider');
-    
-    let isPlaying = false;
-    let audio = new Audio();
-audio.src = AUDIO_SOURCE;
-    let playbackInterval;
-    let volume = 50;
-    
-    // Set initial volume
-    audio.volume = volume / 100;
-    
-    // When metadata is loaded, update duration
-    audio.addEventListener('loadedmetadata', function() {
-        updateDurationDisplay();
-    });
-    
-    function updateDurationDisplay() {
-        const duration = audio.duration;
-        const minutes = Math.floor(duration / 60);
-        const seconds = Math.floor(duration % 60);
-        totalTime.textContent = `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+  <!-- Tombol Shortcut ke Web -->
+  <a href="https://love-ten-orcin.vercel.app/" target="_blank" class="btn-kunjungi">🤍 Love Play</a>
+  <a href="https://alifkece.github.io/Sosmed-Alif/" target="_blank" class="btn-kunjungi">📣 Sosmed Saya</a>
+  <a href="https://alifkece.github.io/playlist-Alif/" target="_blank" class="btn-kunjungi">🎧 Playlist Saya</a>
+
+<script>
+  // === JAM DIGITAL ===
+  function updateTime() {
+    const timeElem = document.getElementById('jam-digital');
+    const now = new Date();
+    let hours = now.getHours();
+    let minutes = now.getMinutes();
+    let seconds = now.getSeconds();
+
+    hours = hours < 10 ? '0' + hours : hours;
+    minutes = minutes < 10 ? '0' + minutes : minutes;
+    seconds = seconds < 10 ? '0' + seconds : seconds;
+
+    timeElem.textContent = `🕒 Time: ${hours}:${minutes}:${seconds}`;
+  }
+  setInterval(updateTime, 1000);
+  updateTime();
+
+  // === Music Player Script ===
+  const audio = document.getElementById('audio');
+  const playPauseBtn = document.getElementById('play-pause');
+  const progress = document.getElementById('progress');
+
+  playPauseBtn.addEventListener('click', () => {
+    if (audio.paused) {
+      audio.play();
+      playPauseBtn.textContent = '⏸️';
+    } else {
+      audio.pause();
+      playPauseBtn.textContent = '▶️';
     }
-(function() {
-    const footer = document.createElement('div');
-    footer.className = 'mt-8 text-center fade-in stagger-6';
-    footer.innerHTML = `
-        <p class="text-white/80 font-medium drop-shadow-lg">
-            Created By <span class="text-green-400 font-bold">AlifTzy</span>
-        </p>
-    `;
-    // Tambahkan ke akhir body atau ke container tertentu
-    document.body.appendChild(footer);
-})();
-    
-    playBtn.addEventListener('click', function() {
-        isPlaying = !isPlaying;
-        if (isPlaying) {
-            playIcon.classList.remove('fa-play');
-            playIcon.classList.add('fa-pause');
-            audio.play();
-            startProgressUpdate();
-        } else {
-            playIcon.classList.remove('fa-pause');
-            playIcon.classList.add('fa-play');
-            audio.pause();
-            stopProgressUpdate();
-        }
-    });
-    
-    function startProgressUpdate() {
-        stopProgressUpdate();
-        playbackInterval = setInterval(updateAudioDisplay, 200);
-    }
-    
-    function stopProgressUpdate() {
-        if (playbackInterval) {
-            clearInterval(playbackInterval);
-        }
-    }
+  });
 
-    
-    function updateAudioDisplay() {
-        if (audio.duration) {
-            const progress = (audio.currentTime / audio.duration) * 100;
-            audioProgress.value = progress;
-            
-            const currentSeconds = Math.floor(audio.currentTime);
-            const minutes = Math.floor(currentSeconds / 60);
-            const seconds = currentSeconds % 60;
-            
-            const timeString = `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
-            timeDisplay.textContent = timeString;
-            currentTime.textContent = timeString;
-        }
-    }
-    
-    audioProgress.addEventListener('input', function() {
-        if (audio.duration) {
-            const seekTime = (this.value / 100) * audio.duration;
-            audio.currentTime = seekTime;
-            updateAudioDisplay();
-        }
-    });
-    
-    volumeSlider.addEventListener('input', function() {
-        volume = this.value;
-        audio.volume = volume / 100;
-    });
-    
-    // Handle audio ending
-    audio.addEventListener('ended', function() {
-        isPlaying = false;
-        playIcon.classList.remove('fa-pause');
-        playIcon.classList.add('fa-play');
-        stopProgressUpdate();
-        audio.currentTime = 0;
-        updateAudioDisplay();
-    });
-    
-    // Smooth scrolling
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            document.querySelector(this.getAttribute('href')).scrollIntoView({
-                behavior: 'smooth'
-            });
-        });
-    });
-    
-    // Add click effects to buttons
-    document.querySelectorAll('.whatsapp-btn').forEach(btn => {
-    btn.addEventListener('click', function(e) {
-        e.preventDefault(); // Cegah default dulu untuk efek ripple
+  audio.addEventListener('timeupdate', () => {
+    const progressPercent = (audio.currentTime / audio.duration) * 100;
+    progress.value = progressPercent || 0;
+  });
 
-        const href = this.getAttribute('href'); // Ambil href dari tombol
-
-        // Buat ripple effect
-        const ripple = document.createElement('span');
-        const rect = this.getBoundingClientRect();
-        const size = Math.max(rect.width, rect.height);
-        ripple.style.width = ripple.style.height = size + 'px';
-        ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
-        ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
-        ripple.classList.add('ripple');
-        this.appendChild(ripple);
-
-        // Hapus ripple setelah animasi selesai
-        setTimeout(() => {
-            ripple.remove();
-        }, 600);
-
-        // Arahkan ke link setelah efek dimulai
-        setTimeout(() => {
-            window.location.href = href;
-        }, 100); // Delay kecil agar ripple terlihat sebelum redirect
-    });
-});
-    
-    // Add CSS for ripple effect
-    const style = document.createElement('style');
-    style.textContent = `
-        .ripple {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.6);
-            transform: scale(0);
-            animation: ripple 0.6s linear;
-            pointer-events: none;
-        }
-        
-        @keyframes ripple {
-            to {
-                transform: scale(4);
-                opacity: 0;
-            }
-        }
-    `;
-    document.head.appendChild(style);
-    
-    // Initialize time display
-    updateAudioDisplay();
+  progress.addEventListener('input', () => {
+    audio.currentTime = (progress.value / 100) * audio.duration;
+  });
 </script>
+
 </body>
 </html>
